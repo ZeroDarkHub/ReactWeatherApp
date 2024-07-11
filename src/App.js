@@ -36,7 +36,7 @@ console.log(data);
                 <div className="container">
                   <div className="top">
                     <div className="location">
-                      <p className={'bold'}>{data.name}</p>
+                      <p style={{fontSize: 50}}>{data.name}</p>
                     </div>
                   <div className="temp">
                       <h1 style={{color: '#e61e74'}}>{data.main.temp.toFixed()}°F</h1>
@@ -50,15 +50,19 @@ console.log(data);
                 <div className="bottom">
                   <div className="feels">
                     <p className='bold'>{data.main.feels_like.toFixed()}°F</p>
-                    <p>Feels</p>
+                    <p style={{fontSize: 18}}>Feels</p>
                    </div>
                   <div className="humidity">
                     <p className='bold'>{data.main.humidity}%</p>
-                    <p>Humidity</p>
+                    <p style={{fontSize: 18}}>Humidity</p>
+                  </div>
+                  <div className="pressure">
+                    <p className='bold'>{data.main.pressure} mbar</p>
+                    <p style={{fontSize: 18}}>Pressure</p>
                   </div>
                 <div className="wind">
-                  <p className='bold'>{data.wind.speed.toFixed()} MPH</p>
-                  <p>Wind</p>
+                  <p className='bold'>{data.wind.speed.toFixed()} mph</p>
+                  <p style={{fontSize: 18}}>Wind</p>
                 </div>
                   </div>
                 </div>     
