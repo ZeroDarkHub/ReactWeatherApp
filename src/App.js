@@ -11,7 +11,10 @@ import image8 from './assets/image8.jpg';
 
 
 
+
+
 function App() {
+  //API KEY AND API ENDPOINT BELOW THIS LINE
   // `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}`
   // bcf3a8bafaf840c71e5b48a3cc1a3b41
 
@@ -24,7 +27,7 @@ function App() {
 
   
 
-  // generates a random background image and then updates state
+  // GENERATE A RANDOM BACKGROUND IMAGE AND THEN UPDATE STATE
   const randomBackGround = () => {
     const randomImage = backgroundImage[Math.floor(Math.random() * backgroundImage.length)];
     setBackgroundImage(randomImage);
@@ -33,9 +36,10 @@ function App() {
   
   
 
-// gets users current location through the devices browser
+// GET USERS LOCATION AND INJET LONGITUDE AND LATITUDE INTO STRING ALONG ALONG WITH API KEY. A BROWSER WINDOW AND APP REFRESH FUNCTION FOR EVERY 30 MINUTES.
 
 useEffect(() => {
+  
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
@@ -46,28 +50,29 @@ useEffect(() => {
     setError('Geolocation not available');
   }
 
- // Set up an interval to refresh the app every 30 minutes (1800000 milliseconds)
+ // SET UP AN INTERVAL TO REFRESH THE APP EVERY 30 MINUTES (1800000 milliseconds)
  const intervalId = setInterval(() => {
   window.location.reload();
 }, 1800000);
 
-// Clear the interval when the component unmounts
+// CLEAR THE INTERVAL WHEN THE COMPONENT UNMOUNTS
 return () => clearInterval(intervalId);
 
 }, []);
 
 
-      
+
    
-// console.log(data)
+
 
 
   useEffect(() =>{
     if (myLocation){
       randomBackGround()
-    console.log("useEffect ran...")
+    // console.log("useEffect ran...")
+    console.log("LOOKING FOR ERROS...SORRY NOTHING HERE...HAVE A NICE DAY!")
     fetch(myLocation)
-    //Here we are checking to see if the "respond object" is NOT ok, and then throw an error message.
+    //HERE WE ARE CHECKING TO SEE IF THE "RESPOND OBJECT" IS NOT OK, AND THEN THROW AN ERROR MESSAGE.
     .then(res =>{
         if(!res.ok) {
             throw Error("Oops, looks like some server problems...");
@@ -75,30 +80,16 @@ return () => clearInterval(intervalId);
         return res.json();
     })
     .then(data =>{
-        setData(data);
+        setData(data)
+        // console.log(data)
 
-        // If we want to extract a certain image because of certain perameters then we can do a switch statement in this area.
+        // IF WE WANT TO DISPLAY A CERTAIN IMAGE AND TEST DATA PARAMETERS THEN WE CAN DO A SWITCH STATEMENT IN THIS AREA.
 
-        // if (data.weather[0].main === 'Thunderstorm'){
-        //   setBackgroundImage(backgroundImage[9])
-        // }
-        // else if(data.weather[0].main === 'Drizzle'){
-        //   setBackgroundImage(backgroundImage[11])
-        // }
-        // else if(data.weather[0].main == 'Rain'){
-        //   setBackgroundImage(backgroundImage[11])
-        // }
-        // else if(data.weather[0].main === 'Tornado'){
-        //   setBackgroundImage(backgroundImage[12])
-        // }
-        // else if(data.weather[0].main === 'Clouds'){
-        //   setBackgroundImage(backgroundImage[5])
-        // }
-        // else if(data.weather[0].main === 'Clear'){
-        //   setBackgroundImage(backgroundImage[1])
+        // if (data.weather[0].main === 'Rain'){
+        //   setBackgroundImage(backgroundImage[9]);
         // }
         // else{
-        //   randomBackGround()
+        //   randomBackGround();
         // }
 
 
@@ -126,14 +117,14 @@ return () => clearInterval(intervalId);
         setPending(false);
         setError(null);
     })
-    //This will catch any kind of Network OR Server error message.
+    //THIS WILL CATCH ANY KIND OF NETWORK OR SERVER ERROR MESSAGE.
     .catch(err => {
         console.log("Seems Like We Have Some Server Problems.");
         setError("Seems Like We Have Some Server Problems.");
     })
     }
 
-    // url is passed into the dependency array, so that if the url ever changes it will re-run to get the data for the current end-point.
+    // URL IS PASSED INTO THE DEPENDENCY ARRAY, SO THAT IF THE URL EVER CHANGES IT WILL RE-RUN TO GET THE DATA FOR THE CURRENT END-POINT.
 },[myLocation]) 
 
 
@@ -158,6 +149,7 @@ return () => clearInterval(intervalId);
             </div>
             <div className="description">
               <p>{data.weather[0].main}</p>
+              <p>{data.weather[0].description}</p>
               <p>Max {data.main.temp_max.toFixed()}°F</p>
               <p>Low {data.main.temp_min.toFixed()}°F</p>
               <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
