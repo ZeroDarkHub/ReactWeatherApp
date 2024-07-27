@@ -15,7 +15,8 @@ import image8 from './assets/image8.jpg';
 
 function App() {
   //API KEY AND API ENDPOINT BELOW THIS LINE
-  // `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}`
+  // 5 DAY FORCAST `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
+  // CURRETN WEATHER `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
   // bcf3a8bafaf840c71e5b48a3cc1a3b41
 
   const API_KEY =`${process.env.REACT_APP_API_KEY}`;
@@ -24,16 +25,33 @@ function App() {
   const [error,setError] = useState(null);
   const [myLocation, setMyLocation] = useState('');
   const [backgroundImage, setBackgroundImage] = useState([image0,image1,image2,image3,image4,image5,image6,image7,image8]);
+  
 
   
 
-  // GENERATE A RANDOM BACKGROUND IMAGE AND THEN UPDATE STATE
+  // GET USERS TIME AND GENERATE A RANDOM BACKGROUND IMAGE
   const randomBackGround = () => {
-    const randomImage = backgroundImage[Math.floor(Math.random() * backgroundImage.length)];
-    setBackgroundImage(randomImage);
+    // const randomImage = backgroundImage[Math.floor(Math.random() * backgroundImage.length)];
+    // setBackgroundImage(randomImage);
+    const date = new Date();
+    const hours = date.getHours();
+    if (hours >= 5 && hours < 12){
+      setBackgroundImage(backgroundImage[1]);
+    } 
+    else if (hours >= 12 && hours < 17){
+      setBackgroundImage(backgroundImage[3]);
+    }
+    else if (hours >= 17 && hours < 21){
+      setBackgroundImage(backgroundImage[2]);
+    }
+    else{
+      setBackgroundImage(backgroundImage[6]);
+    }
   
   }
   
+
+  // console.log(data);
   
 
 // GET USERS LOCATION AND INJET LONGITUDE AND LATITUDE INTO STRING ALONG ALONG WITH API KEY. A BROWSER WINDOW AND APP REFRESH FUNCTION FOR EVERY 30 MINUTES.
@@ -62,8 +80,6 @@ return () => clearInterval(intervalId);
 
 
 
-   
-
 
 
   useEffect(() =>{
@@ -81,39 +97,6 @@ return () => clearInterval(intervalId);
     })
     .then(data =>{
         setData(data)
-        // console.log(data)
-
-        // IF WE WANT TO DISPLAY A CERTAIN IMAGE AND TEST DATA PARAMETERS THEN WE CAN DO A SWITCH STATEMENT IN THIS AREA.
-
-        // if (data.weather[0].main === 'Rain'){
-        //   setBackgroundImage(backgroundImage[9]);
-        // }
-        // else{
-        //   randomBackGround();
-        // }
-
-
-      // SWITCH STATEMENT EXAMPLE BELOW....
-
-        // switch(setBackgroundImage) {
-        //   case data.weather[0].main === 'Thunderstorm':
-        //     setBackgroundImage(backgroundImage[9])
-        //     break;
-        //   case data.weather[0].main === 'Drizzle' || 'Rain':
-        //     setBackgroundImage(backgroundImage[11])
-        //     break;
-        //   case data.weather[0].main === 'Tornado':
-        //     setBackgroundImage(backgroundImage[12])
-        //     break;
-        //   case data.weather[0].main === 'Clouds':
-        //     setBackgroundImage(backgroundImage[5])
-        //     break;
-        //   default:
-        //     randomBackGround()
-        // }
-
-
-
         setPending(false);
         setError(null);
     })
