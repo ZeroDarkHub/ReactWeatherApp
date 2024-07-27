@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from 'react';
-import image0 from './assets/image0.jpg';
-import image1 from './assets/image1.jpg';
-import image2 from './assets/image2.jpg';
-import image3 from './assets/image3.jpg';
-import image4 from './assets/image4.jpg';
-import image5 from './assets/image5.jpg';
-import image6 from './assets/image6.jpg';
-import image7 from './assets/image7.jpg';
-import image8 from './assets/image8.jpg';
+import d1 from './assets/d1.jpg';
+import d2 from './assets/d2.jpg';
+import d3 from './assets/d3.jpg';
+import d4 from './assets/d4.jpg';
+import d5 from './assets/d5.jpg';
+import n1 from './assets/n1.jpg';
+import n2 from './assets/n2.jpg';
+import n3 from './assets/n3.jpg';
 
 
 
@@ -16,36 +15,48 @@ import image8 from './assets/image8.jpg';
 function App() {
   //API KEY AND API ENDPOINT BELOW THIS LINE
   // 5 DAY FORCAST `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
-  // CURRETN WEATHER `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
-  // bcf3a8bafaf840c71e5b48a3cc1a3b41
+  // CURRENT WEATHER `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
+  // KEY bcf3a8bafaf840c71e5b48a3cc1a3b41
 
   const API_KEY =`${process.env.REACT_APP_API_KEY}`;
   const [data,setData] = useState(null);
   const [pending,setPending] =useState(true);
   const [error,setError] = useState(null);
   const [myLocation, setMyLocation] = useState('');
-  const [backgroundImage, setBackgroundImage] = useState([image0,image1,image2,image3,image4,image5,image6,image7,image8]);
+  const [backgroundImage, setBackgroundImage] = useState([d1,d2,d3,d4,d5,n1,n2,n3]);
   
 
   
 
-  // GET USERS TIME AND GENERATE A RANDOM BACKGROUND IMAGE
+  // GET USERS TIME AND GENERATE A RANDOM BACKGROUND IMAGE FOR THE TIME OF DAY :)
   const randomBackGround = () => {
     // const randomImage = backgroundImage[Math.floor(Math.random() * backgroundImage.length)];
     // setBackgroundImage(randomImage);
     const date = new Date();
     const hours = date.getHours();
-    if (hours >= 5 && hours < 12){
-      setBackgroundImage(backgroundImage[1]);
+    if (hours >= 5 && hours < 7){
+      setBackgroundImage(backgroundImage[0]);
     } 
-    else if (hours >= 12 && hours < 17){
-      setBackgroundImage(backgroundImage[3]);
+    else if (hours >= 7 && hours < 9){
+      setBackgroundImage(backgroundImage[1]);
     }
-    else if (hours >= 17 && hours < 21){
+    else if (hours >= 9 && hours < 12){
       setBackgroundImage(backgroundImage[2]);
     }
-    else{
+    else if (hours >= 12 && hours < 15){
+      setBackgroundImage(backgroundImage[3]);
+    }
+    else if (hours >= 15 && hours < 17){
+      setBackgroundImage(backgroundImage[4]);
+    }
+    else if (hours >= 17 && hours < 20){
+      setBackgroundImage(backgroundImage[5]);
+    }
+    else if (hours >= 20 && hours < 22){
       setBackgroundImage(backgroundImage[6]);
+    }
+    else{
+      setBackgroundImage(backgroundImage[7]);
     }
   
   }
@@ -125,17 +136,17 @@ return () => clearInterval(intervalId);
         <div className="container">
           <div className="top">
             <div className="location">
-              <p style={{ fontSize: 50 }}>{data.name}</p>
+              <p style={{ fontSize: 50, color: 'white' }}>{data.name}</p>
             </div>
             <div className="temp">
-              <h1 style={{ color: '#e61e74' }}>{data.main.temp.toFixed()}°F</h1>
+              <h1 style={{ color: 'white' }}>{data.main.temp.toFixed()}°F</h1>
             </div>
             <div className="description">
-              <p>{data.weather[0].main}</p>
-              <p>{data.weather[0].description}</p>
-              <p>Max {data.main.temp_max.toFixed()}°F</p>
-              <p>Low {data.main.temp_min.toFixed()}°F</p>
-              <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
+            <p style={{color: 'white'}}>{data.weather[0].main}</p>
+            <p style={{color: 'white'}}>{data.weather[0].description}</p>
+            <p style={{color: 'white'}}>Max {data.main.temp_max.toFixed()}°F</p>
+            <p style={{color: 'white'}}>Low {data.main.temp_min.toFixed()}°F</p>
+            <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
             </div>
           </div>
           <div className="bottom">
