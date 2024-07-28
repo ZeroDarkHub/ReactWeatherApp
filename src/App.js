@@ -24,12 +24,14 @@ function App() {
   const [error,setError] = useState(null);
   const [myLocation, setMyLocation] = useState('');
   const [backgroundImage, setBackgroundImage] = useState([d1,d2,d3,d4,d5,n1,n2,n3]);
+  const [windDir,setWindDir] = useState(0);
+  
   
 
   
 
-  // GET USERS TIME AND GENERATE A RANDOM BACKGROUND IMAGE FOR THE TIME OF DAY :)
-  const randomBackGround = () => {
+  // GET USERS TIME AND GENERATE A BACKGROUND IMAGE FOR THE TIME OF DAY :)
+  const handleBackGround = () => {
     // const randomImage = backgroundImage[Math.floor(Math.random() * backgroundImage.length)];
     // setBackgroundImage(randomImage);
     const date = new Date();
@@ -61,6 +63,7 @@ function App() {
   
   }
   
+
 
   // console.log(data);
   
@@ -95,7 +98,7 @@ return () => clearInterval(intervalId);
 
   useEffect(() =>{
     if (myLocation){
-      randomBackGround()
+      handleBackGround()
     // console.log("useEffect ran...")
     console.log("LOOKING FOR ERROS...SORRY NOTHING HERE...HAVE A NICE DAY!")
     fetch(myLocation)
@@ -108,6 +111,34 @@ return () => clearInterval(intervalId);
     })
     .then(data =>{
         setData(data)
+        // checking for when degrees and updating state to display on UI
+        if(data.wind.deg >= 0 && data.wind.deg < 22.5){
+          setWindDir("North");
+        }
+        else if(data.wind.deg >= 22.5 && data.wind.deg < 67.5){
+          setWindDir("Northeast");
+        }
+        else if(data.wind.deg >= 67.5 && data.wind.deg < 112.5){
+          setWindDir("East");
+        }
+        else if(data.wind.deg >= 112.5 && data.wind.deg < 157.5){
+          setWindDir("Southeast");
+        }
+        else if(data.wind.deg >= 157.5 && data.wind.deg < 202.5){
+          setWindDir("South");
+        }
+        else if(data.wind.deg >= 202.5 && data.wind.deg < 247.5){
+          setWindDir("Southwest");
+        }
+        else if(data.wind.deg >= 247.5 && data.wind.deg < 292.5){
+          setWindDir("West");
+        }
+        else if(data.wind.deg >= 292.5 && data.wind.deg < 337.5){
+          setWindDir("Northwest");
+        }
+        else{
+          setWindDir("North");
+        }
         setPending(false);
         setError(null);
     })
@@ -152,19 +183,19 @@ return () => clearInterval(intervalId);
           <div className="bottom">
             <div className="feels">
               <p className='bold'>{data.main.feels_like.toFixed()}°F</p>
-              <p style={{ fontSize: 18 }}>Feels</p>
+              <p style={{ fontSize: 18 }}>FEELS</p>
             </div>
             <div className="humidity">
               <p className='bold'>{data.main.humidity}%</p>
-              <p style={{ fontSize: 18 }}>Humidity</p>
+              <p style={{ fontSize: 18 }}>HUM</p>
             </div>
             <div className="pressure">
-              <p className='bold'>{data.main.pressure} mbar</p>
-              <p style={{ fontSize: 18 }}>Pressure</p>
+              <p className='bold'>{windDir}</p>
+              <p style={{ fontSize: 18 }}>WDIR</p>
             </div>
             <div className="wind">
               <p className='bold'>{data.wind.speed.toFixed()} mph</p>
-              <p style={{ fontSize: 18 }}>Wind</p>
+              <p style={{ fontSize: 18 }}>WSPD</p>
             </div>
           </div>
         </div>
