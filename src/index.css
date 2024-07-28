@@ -59,16 +59,18 @@ h1{
   margin: 1rem auto;
 }
 
-/*
 
-.app .description{
+
+.app .description .icon{
   position: relative;
-  right: -90%;
-  transform-origin: 0 0;
-  transform: rotate(269deg);
+  right: -20%;
+  transform-origin: 0% 0%;
+  transform: rotate(360deg);
+  margin-left: 150px;
+  bottom: 150px;
 }
 
-*/
+
 .app .bottom{
   display: flex;
   justify-content: space-around;

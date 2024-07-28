@@ -46,10 +46,10 @@ function App() {
     else if (hours >= 12 && hours < 15){
       setBackgroundImage(backgroundImage[3]);
     }
-    else if (hours >= 15 && hours < 17){
+    else if (hours >= 15 && hours < 19){
       setBackgroundImage(backgroundImage[4]);
     }
-    else if (hours >= 17 && hours < 20){
+    else if (hours >= 19 && hours < 20){
       setBackgroundImage(backgroundImage[5]);
     }
     else if (hours >= 20 && hours < 22){
@@ -146,7 +146,7 @@ return () => clearInterval(intervalId);
             <p style={{color: 'white'}}>{data.weather[0].description}</p>
             <p style={{color: 'white'}}>Max {data.main.temp_max.toFixed()}°F</p>
             <p style={{color: 'white'}}>Low {data.main.temp_min.toFixed()}°F</p>
-            <img src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
+            <img className= 'icon'src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
             </div>
           </div>
           <div className="bottom">
