@@ -58,21 +58,43 @@ h1{
 .app .top{
   width: 100%;
   margin: 1rem auto;
+  justify-content: space-around;
+  border-radius: 12px;
+  background-color: #25143b96;
+  padding: 1rem;
+}
+/* 
+.app .top:hover, .app .top:active{
+  box-shadow: inset 0 0 10px rgb(102, 225, 225);
 }
 
+.app .bottom:hover, .app .bottom:active{
+  box-shadow: inset 0 0 10px rgb(102, 225, 225);
+} */
 
-
-.app .description .icon{
+/* 
+.app .description{
   position: relative;
-  right: -20%;
+  right: -33%;
   transform-origin: 0% 0%;
   transform: rotate(360deg);
-  margin-left: 150px;
-  bottom: 200px;
+  margin-left: 150px;   
+  bottom: 314px;
   height:120px;
   width:120px;
+}  */
+
+.description{
+  margin-left: 15px;
 }
 
+
+/* 
+.signature {
+  height: 100px;
+  width: 200px;
+  margin-left: 240px;
+} */
 
 .app .bottom{
   display: flex;
@@ -82,14 +104,19 @@ h1{
   margin: 1rem auto;
   padding: 1rem;
   border-radius: 12px;
-  background-color: rgba(0, 0, 0, 0.648);
+  background-color: #26212cb9;
   color: #fff;
 }
 .bold{
   font-weight: 700;
   font-size: medium;
 }
-
-
-
+/* .right-side{
+  position: relative;
+  right: -20%;
+  transform-origin: 0% 0%;
+  transform: rotate(360deg);
+  margin-left: 250px;
+  writing-mode: vertical-rl;
+} */
 

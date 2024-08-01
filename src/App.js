@@ -12,10 +12,12 @@ import n3 from './assets/n3.jpg';
 
 
 
+
 function App() {
   //API KEY AND API ENDPOINT BELOW THIS LINE
   // 5 DAY FORCAST `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
   // CURRENT WEATHER `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
+  // GEOPIFY 'https://api.geoapify.com/v1/ipinfo?apiKey=3a72a2465cdc410d86b5cba09145c6a9';
   // KEY bcf3a8bafaf840c71e5b48a3cc1a3b41
 
   const API_KEY =`${process.env.REACT_APP_API_KEY}`;
@@ -25,6 +27,7 @@ function App() {
   const [myLocation, setMyLocation] = useState('');
   const [backgroundImage, setBackgroundImage] = useState([d1,d2,d3,d4,d5,n1,n2,n3]);
   const [windDir,setWindDir] = useState(0);
+  const [greeting,setGreeting] = useState("");
   
   
 
@@ -38,27 +41,35 @@ function App() {
     const hours = date.getHours();
     if (hours >= 5 && hours < 7){
       setBackgroundImage(backgroundImage[0]);
+      setGreeting("GOOD MORNING");
     } 
     else if (hours >= 7 && hours < 9){
       setBackgroundImage(backgroundImage[1]);
+      setGreeting("GOOD MORNING");
     }
     else if (hours >= 9 && hours < 12){
       setBackgroundImage(backgroundImage[2]);
+      setGreeting("GOOD MORNING");
     }
     else if (hours >= 12 && hours < 15){
       setBackgroundImage(backgroundImage[3]);
+      setGreeting("GOOD AFTERNOON");
     }
-    else if (hours >= 15 && hours < 19){
+    else if (hours >= 15 && hours < 18){
       setBackgroundImage(backgroundImage[4]);
+      setGreeting("GOOD AFTERNOON");
     }
-    else if (hours >= 19 && hours < 20){
+    else if (hours >= 18 && hours < 20){
       setBackgroundImage(backgroundImage[5]);
+      setGreeting("GOOD EVENING");
     }
-    else if (hours >= 20 && hours < 22){
+    else if (hours >= 20 && hours < 21){
       setBackgroundImage(backgroundImage[6]);
+      setGreeting("GOOD NIGHT");
     }
     else{
       setBackgroundImage(backgroundImage[7]);
+      setGreeting("GOOD NIGHT");
     }
   
   }
@@ -98,7 +109,7 @@ return () => clearInterval(intervalId);
 
   useEffect(() =>{
     if (myLocation){
-      handleBackGround()
+      handleBackGround();
     // console.log("useEffect ran...")
     console.log("LOOKING FOR ERROS...SORRY NOTHING HERE...HAVE A NICE DAY!")
     fetch(myLocation)
@@ -113,31 +124,31 @@ return () => clearInterval(intervalId);
         setData(data)
         // checking for when degrees and updating state to display on UI
         if(data.wind.deg >= 0 && data.wind.deg < 22.5){
-          setWindDir("North");
+          setWindDir("N");
         }
         else if(data.wind.deg >= 22.5 && data.wind.deg < 67.5){
-          setWindDir("Northeast");
+          setWindDir("NE");
         }
         else if(data.wind.deg >= 67.5 && data.wind.deg < 112.5){
-          setWindDir("East");
+          setWindDir("E");
         }
         else if(data.wind.deg >= 112.5 && data.wind.deg < 157.5){
-          setWindDir("Southeast");
+          setWindDir("SE");
         }
         else if(data.wind.deg >= 157.5 && data.wind.deg < 202.5){
-          setWindDir("South");
+          setWindDir("S");
         }
         else if(data.wind.deg >= 202.5 && data.wind.deg < 247.5){
-          setWindDir("Southwest");
+          setWindDir("SW");
         }
         else if(data.wind.deg >= 247.5 && data.wind.deg < 292.5){
-          setWindDir("West");
+          setWindDir("W");
         }
         else if(data.wind.deg >= 292.5 && data.wind.deg < 337.5){
-          setWindDir("Northwest");
+          setWindDir("NW");
         }
         else{
-          setWindDir("North");
+          setWindDir("N");
         }
         setPending(false);
         setError(null);
@@ -167,35 +178,33 @@ return () => clearInterval(intervalId);
         <div className="container">
           <div className="top">
             <div className="location">
-              <p style={{ fontSize: 50, color: 'white' }}>{data.name}</p>
+              <p style={{ fontSize: 20, fontWeight: 'bold',color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)', textTransform: 'uppercase' }}>{data.name}</p> 
+              <p style={{ fontSize: 14, color: 'white',}}>{greeting}</p>
             </div>
             <div className="temp">
-              <h1 style={{ color: 'white' }}>{data.main.temp.toFixed()}°F</h1>
+              <h1 style={{ color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)' }}>{data.main.temp.toFixed()}°F</h1>
+              <img className= 'icon'src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
+              <div className="description">
+                <h2 style={{color: 'white', fontSize: 14, textShadow: '2px 3px 5px rgba(0,0,0,0.5)', textTransform: 'uppercase'}}>{data.weather[0].description}</h2>
+              </div>
             </div>
-            <div className="description">
-            <p style={{color: 'white'}}>{data.weather[0].main}</p>
-            <p style={{color: 'white'}}>{data.weather[0].description}</p>
-            <p style={{color: 'white'}}>Max {data.main.temp_max.toFixed()}°F</p>
-            <p style={{color: 'white'}}>Low {data.main.temp_min.toFixed()}°F</p>
-            <img className= 'icon'src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
-            </div>
-          </div>
+           </div>
           <div className="bottom">
             <div className="feels">
-              <p className='bold'>{data.main.feels_like.toFixed()}°F</p>
-              <p style={{ fontSize: 18 }}>FEELS</p>
+              <p style={{color: 'white'}}className='bold'>{data.main.feels_like.toFixed()}°</p>
+              <p style={{ fontSize: '12px', color: '#BCB1FF' }}>FEELS LIKE</p>
             </div>
             <div className="humidity">
-              <p className='bold'>{data.main.humidity}%</p>
-              <p style={{ fontSize: 18 }}>HUM</p>
+              <p style={{color: 'white'}}className='bold'>{data.main.humidity}%</p>
+              <p style={{ fontSize: '12px', color: '#BCB1FF' }}>HUMIDITY</p>
             </div>
             <div className="pressure">
-              <p className='bold'>{windDir}</p>
-              <p style={{ fontSize: 18 }}>WDIR</p>
+              <p style={{color: 'white'}}className='bold'>{windDir}</p>
+              <p style={{ fontSize: '12px', color: '#BCB1FF' }}>WIND DIR</p>
             </div>
             <div className="wind">
-              <p className='bold'>{data.wind.speed.toFixed()} mph</p>
-              <p style={{ fontSize: 18 }}>WSPD</p>
+              <p style={{color: 'white'}}className='bold'>{data.wind.speed.toFixed()} MPH</p>
+              <p style={{ fontSize: '12px', color: '#BCB1FF' }}>WIND SPD</p>
             </div>
           </div>
         </div>
