@@ -21,13 +21,10 @@ function App() {
   // KEY bcf3a8bafaf840c71e5b48a3cc1a3b41
 
   const API_KEY =`${process.env.REACT_APP_API_KEY}`;
-  const [data,setData] = useState(null);
-  const [pending,setPending] =useState(true);
-  const [error,setError] = useState(null);
-  const [myLocation, setMyLocation] = useState('');
   const [backgroundImage, setBackgroundImage] = useState([d1,d2,d3,d4,d5,n1,n2,n3]);
   const [windDir,setWindDir] = useState(0);
   const [greeting,setGreeting] = useState("");
+  const [weatherData, setWeatherData] = useState(null);
   
   
 
@@ -76,126 +73,100 @@ function App() {
   
 
 
-  // console.log(data);
+
   
 
-// GET USERS LOCATION AND INJET LONGITUDE AND LATITUDE INTO STRING ALONG ALONG WITH API KEY. A BROWSER WINDOW AND APP REFRESH FUNCTION FOR EVERY 30 MINUTES.
 
-useEffect(() => {
-  
-  if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      const locationString = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
-      setMyLocation(locationString);
-    });
-  } else {
-    setError('Geolocation not available');
-  }
-
- // SET UP AN INTERVAL TO REFRESH THE APP EVERY 30 MINUTES (1800000 milliseconds)
- const intervalId = setInterval(() => {
-  window.location.reload();
-}, 1800000);
-
-// CLEAR THE INTERVAL WHEN THE COMPONENT UNMOUNTS
-return () => clearInterval(intervalId);
-
-}, []);
-
-
-
-
-
-  useEffect(() =>{
-    if (myLocation){
+    useEffect(() => {
       handleBackGround();
-    // console.log("useEffect ran...")
-    console.log("LOOKING FOR ERROS...SORRY NOTHING HERE...HAVE A NICE DAY!")
-    fetch(myLocation)
-    //HERE WE ARE CHECKING TO SEE IF THE "RESPOND OBJECT" IS NOT OK, AND THEN THROW AN ERROR MESSAGE.
-    .then(res =>{
-        if(!res.ok) {
-            throw Error("Oops, looks like some server problems...");
-        }
-        return res.json();
-    })
-    .then(data =>{
-        setData(data)
-        // checking for when degrees and updating state to display on UI
-        if(data.wind.deg >= 0 && data.wind.deg < 22.5){
+      const fetchLocationAndWeather = async () => {
+        try {
+          // Fetch location data from Geoapify
+          const locationResponse = await fetch('https://api.geoapify.com/v1/ipinfo?apiKey=3a72a2465cdc410d86b5cba09145c6a9');
+          const locationData = await locationResponse.json();
+          const { latitude, longitude } = locationData.location;
+  
+          // Fetch weather data from OpenWeatherMap using the extracted latitude and longitude
+          const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`);
+          console.log(weatherResponse);
+          const weatherData = await weatherResponse.json();
+          setWeatherData(weatherData);
+           
+         if(weatherData.wind.deg >= 0 && weatherData.wind.deg < 22.5){
           setWindDir("N");
         }
-        else if(data.wind.deg >= 22.5 && data.wind.deg < 67.5){
+        else if(weatherData.wind.deg >= 22.5 && weatherData.wind.deg < 67.5){
           setWindDir("NE");
         }
-        else if(data.wind.deg >= 67.5 && data.wind.deg < 112.5){
+        else if(weatherData.wind.deg >= 67.5 && weatherData.wind.deg < 112.5){
           setWindDir("E");
         }
-        else if(data.wind.deg >= 112.5 && data.wind.deg < 157.5){
+        else if(weatherData.wind.deg >= 112.5 && weatherData.wind.deg < 157.5){
           setWindDir("SE");
         }
-        else if(data.wind.deg >= 157.5 && data.wind.deg < 202.5){
+        else if(weatherData.wind.deg >= 157.5 && weatherData.wind.deg < 202.5){
           setWindDir("S");
         }
-        else if(data.wind.deg >= 202.5 && data.wind.deg < 247.5){
+        else if(weatherData.wind.deg >= 202.5 && weatherData.wind.deg < 247.5){
           setWindDir("SW");
         }
-        else if(data.wind.deg >= 247.5 && data.wind.deg < 292.5){
+        else if(weatherData.wind.deg >= 247.5 && weatherData.wind.deg < 292.5){
           setWindDir("W");
         }
-        else if(data.wind.deg >= 292.5 && data.wind.deg < 337.5){
+        else if(weatherData.wind.deg >= 292.5 && weatherData.wind.deg < 337.5){
           setWindDir("NW");
         }
         else{
           setWindDir("N");
         }
-        setPending(false);
-        setError(null);
-    })
-    //THIS WILL CATCH ANY KIND OF NETWORK OR SERVER ERROR MESSAGE.
-    .catch(err => {
-        console.log("Seems Like We Have Some Server Problems.");
-        setError("Seems Like We Have Some Server Problems.");
-    })
-    }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+        
+      };
+  
+      fetchLocationAndWeather();
 
-    // URL IS PASSED INTO THE DEPENDENCY ARRAY, SO THAT IF THE URL EVER CHANGES IT WILL RE-RUN TO GET THE DATA FOR THE CURRENT END-POINT.
-},[myLocation]) 
+        // SET UP AN INTERVAL TO REFRESH THE APP EVERY 30 MINUTES (1800000 milliseconds)
+        const intervalId = setInterval(() => {
+          window.location.reload();
+        }, 1800000);
+
+        // CLEAR THE INTERVAL WHEN THE COMPONENT UNMOUNTS
+        return () => clearInterval(intervalId);
+
+    }, []);
+  
+
+
+console.log(weatherData);
 
 
   return (
-    <div className="app" style={{
-      width: '100%',
-      height: '100vh',
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}>
-      {pending && <p>Loading Weather...</p>}
-      {error && <p>{error}</p>}
-      {data && (
-        <div className="container">
+    <div className="app" style={{width: '100%', height: '100vh',backgroundImage: `url(${backgroundImage})`,backgroundSize: 'cover',backgroundPosition: 'center', }}>
+        {weatherData ? 
+
+       <div className="container">
           <div className="top">
             <div className="location">
-              <p style={{ fontSize: 20, fontWeight: 'bold',color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)', textTransform: 'uppercase' }}>{data.name}</p> 
+              <p style={{ fontSize: 20, fontWeight: 'bold',color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)', textTransform: 'uppercase' }}>{weatherData.name}</p> 
               <p style={{ fontSize: 14, color: 'white',}}>{greeting}</p>
             </div>
             <div className="temp">
-              <h1 style={{ color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)' }}>{data.main.temp.toFixed()}°F</h1>
-              <img className= 'icon'src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`} alt="weather-icon" />
+              <h1 style={{ color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)' }}>{weatherData.main.temp.toFixed()}°F</h1>
+              <img className= 'icon'src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="weather-icon" />
               <div className="description">
-                <h2 style={{color: 'white', fontSize: 14, textShadow: '2px 3px 5px rgba(0,0,0,0.5)', textTransform: 'uppercase'}}>{data.weather[0].description}</h2>
+                <h2 style={{color: 'white', fontSize: 14, textShadow: '2px 3px 5px rgba(0,0,0,0.5)', textTransform: 'uppercase'}}>{weatherData.weather[0].description}</h2>
               </div>
             </div>
            </div>
           <div className="bottom">
             <div className="feels">
-              <p style={{color: 'white'}}className='bold'>{data.main.feels_like.toFixed()}°</p>
+              <p style={{color: 'white'}}className='bold'>{weatherData.main.feels_like.toFixed()}°</p>
               <p style={{ fontSize: '12px', color: '#BCB1FF' }}>FEELS LIKE</p>
             </div>
             <div className="humidity">
-              <p style={{color: 'white'}}className='bold'>{data.main.humidity}%</p>
+              <p style={{color: 'white'}}className='bold'>{weatherData.main.humidity}%</p>
               <p style={{ fontSize: '12px', color: '#BCB1FF' }}>HUMIDITY</p>
             </div>
             <div className="pressure">
@@ -203,13 +174,14 @@ return () => clearInterval(intervalId);
               <p style={{ fontSize: '12px', color: '#BCB1FF' }}>WIND DIR</p>
             </div>
             <div className="wind">
-              <p style={{color: 'white'}}className='bold'>{data.wind.speed.toFixed()} MPH</p>
+              <p style={{color: 'white'}}className='bold'>{weatherData.wind.speed.toFixed()} MPH</p>
               <p style={{ fontSize: '12px', color: '#BCB1FF' }}>WIND SPD</p>
             </div>
           </div>
         </div>
-      )}
-    </div>
+          : "loading weather data..."}
+      </div>
+      
   );
 }
 
