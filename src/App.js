@@ -18,13 +18,16 @@ function App() {
   // 5 DAY FORCAST `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
   // CURRENT WEATHER `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`;
   // GEOPIFY 'https://api.geoapify.com/v1/ipinfo?apiKey=3a72a2465cdc410d86b5cba09145c6a9';
-  // KEY bcf3a8bafaf840c71e5b48a3cc1a3b41
+  // WEATHER KEY bcf3a8bafaf840c71e5b48a3cc1a3b41
+  // GEOPIFY KEY 3a72a2465cdc410d86b5cba09145c6a9
 
-  const API_KEY =`${process.env.REACT_APP_API_KEY}`;
+  const WEATHER_API_KEY =`${process.env.REACT_APP_API_KEY}`;
+  const GEOPIFY_KEY =`${process.env.REACT_APP_API_KEY2}`;
   const [backgroundImage, setBackgroundImage] = useState([d1,d2,d3,d4,d5,n1,n2,n3]);
   const [windDir,setWindDir] = useState(0);
   const [greeting,setGreeting] = useState("");
   const [weatherData, setWeatherData] = useState(null);
+  const [state,setState] = useState("");
   
   
 
@@ -82,13 +85,15 @@ function App() {
       const fetchLocationAndWeather = async () => {
         try {
           // Fetch location data from Geoapify
-          const locationResponse = await fetch('https://api.geoapify.com/v1/ipinfo?apiKey=3a72a2465cdc410d86b5cba09145c6a9');
+          const locationResponse = await fetch(`https://api.geoapify.com/v1/ipinfo?apiKey=${GEOPIFY_KEY}`);
           const locationData = await locationResponse.json();
+          setState(locationData.state.name);
+          // console.log(locationData);
           const { latitude, longitude } = locationData.location;
   
           // Fetch weather data from OpenWeatherMap using the extracted latitude and longitude
-          const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}`);
-          console.log(weatherResponse);
+          const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=imperial&appid=${WEATHER_API_KEY}`);
+          // console.log(weatherResponse);
           const weatherData = await weatherResponse.json();
           setWeatherData(weatherData);
            
@@ -139,7 +144,8 @@ function App() {
   
 
 
-console.log(weatherData);
+// console.log(weatherData);
+console.log("Simplicity, carried to the extreme, becomes elegance.— Jon Franklin");
 
 
   return (
@@ -149,14 +155,16 @@ console.log(weatherData);
        <div className="container">
           <div className="top">
             <div className="location">
-              <p style={{ fontSize: 20, fontWeight: 'bold',color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)', textTransform: 'uppercase' }}>{weatherData.name}</p> 
-              <p style={{ fontSize: 14, color: 'white',}}>{greeting}</p>
+              <p style={{ fontSize: 20, fontWeight: 'bold',color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)', textTransform: 'uppercase' }}>{weatherData.name} , {state}</p> 
+              <p style={{ fontSize: 14, color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)'}}>{greeting}</p>
             </div>
             <div className="temp">
-              <h1 style={{ color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)' }}>{weatherData.main.temp.toFixed()}°F</h1>
+              <div className="actual-temp">
+                <h1 style={{ color: 'white', textShadow: '5px 5px 0px rgba(0,0,0,0.2)' }}>{weatherData.main.temp.toFixed()}°F</h1>
+              </div>
               <img className= 'icon'src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} alt="weather-icon" />
               <div className="description">
-                <h2 style={{color: 'white', fontSize: 14, textShadow: '2px 3px 5px rgba(0,0,0,0.5)', textTransform: 'uppercase'}}>{weatherData.weather[0].description}</h2>
+                <p style={{color: 'white', fontSize: 14, textShadow: '2px 3px 5px rgba(0,0,0,0.5)', textTransform: 'uppercase'}}>{weatherData.weather[0].description}</p>
               </div>
             </div>
            </div>

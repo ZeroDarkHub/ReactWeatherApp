@@ -60,7 +60,7 @@ h1{
   margin: 1rem auto;
   justify-content: space-around;
   border-radius: 12px;
-  background-color: #25143b96;
+  background-color: #26212cb9;;
   padding: 1rem;
 }
 /* 
@@ -88,6 +88,10 @@ h1{
   margin-left: 15px;
 }
 
+.actual-temp{
+  margin: 0 auto;
+  margin-top: 20px;
+}
 
 /* 
 .signature {
